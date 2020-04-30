@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "Liberation Mono:pixelsize=18:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -192,6 +192,8 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_B,           kscrollup,      {.i = -1} },
 	{ TERMMOD,              XK_F,           kscrolldown,    {.i = -1} },
 	{ TERMMOD,              XK_X,           invert,         { }       },
+	{ TERMMOD,              XK_plus,        zoom,           {.f = +1} },
+	{ TERMMOD,              XK_underscore,  zoom,           {.f = -1} },
 };
 
 /*
