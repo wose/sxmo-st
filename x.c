@@ -492,6 +492,10 @@ bpress(XEvent *e)
 	if (mouseaction(e, 0))
 		return;
 
+  // For now - we're just nop'ing the selection concept because
+  // it conflicts with gestures via lisgd
+	return;
+
 	if (e->xbutton.button == Button1) {
 		/*
 		 * If the user clicks below predefined timeouts specific
