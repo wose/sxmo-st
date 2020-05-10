@@ -174,8 +174,8 @@ static MouseShortcut mshortcuts[] = {
 #define MODKEY Mod1Mask
 #define TERMMOD (ControlMask|ShiftMask)
 
-static char *externalpipe_pastecomplete[] = { "sxmo_pastecomplete.sh", NULL };
-static char *externalpipe_copycomplete[] = { "sxmo_copycomplete.sh", NULL };
+static char *externalpipe_typecomplete[] = { "/bin/sh", "-c", "sxmo_pipecomplete.sh type $0", NULL };
+static char *externalpipe_copycomplete[] = { "/bin/sh", "-c", "sxmo_pipecomplete.sh copy $0", NULL };
 
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function        argument */
@@ -198,8 +198,8 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_plus,        zoom,           {.f = +1} },
 	{ TERMMOD,              XK_underscore,  zoom,           {.f = -1} },
 
-	{ TERMMOD,              XK_U, externalpipe, { .v = externalpipe_pastecomplete } },
-	{ TERMMOD,              XK_Y, externalpipe, { .v = externalpipe_copycomplete } },
+	{ TERMMOD,              XK_U, externalpipe, { .v = externalpipe_typecomplete } },
+	{ TERMMOD,              XK_I, externalpipe, { .v = externalpipe_copycomplete } },
 };
 
 /*
