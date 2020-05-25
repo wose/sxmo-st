@@ -445,7 +445,7 @@ selstart(int col, int row, int snap)
 
 	if (sel.snap != 0)
 		sel.mode = SEL_READY;
-	tsetdirt(sel.nb.y, sel.ne.y);
+	//tsetdirt(sel.nb.y, sel.ne.y);
 }
 
 void
