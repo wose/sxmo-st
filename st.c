@@ -492,6 +492,12 @@ selnormalize(void)
 	sel.nb.y = MIN(sel.ob.y, sel.oe.y);
 	sel.ne.y = MAX(sel.ob.y, sel.oe.y);
 
+	// E.g. cancels out all selsnapping functionality since this
+	// the pinephone's touchscreen likes to send extra mouseup events
+	// causing everything to selsnap..?
+	// This is a temp workaround - selsnapping would be nice eventually..
+	return;
+
 	selsnap(&sel.nb.x, &sel.nb.y, -1);
 	selsnap(&sel.ne.x, &sel.ne.y, +1);
 
