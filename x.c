@@ -60,6 +60,7 @@ static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
 static void ttysend(const Arg *);
 static void invert(const Arg *);
+static void toggleselectionmode(const Arg *);
 
 /* config.h for applying patches and the configuration. */
 #include "config.h"
@@ -94,7 +95,7 @@ typedef struct {
 	Window win;
 	Drawable buf;
 	GlyphFontSpec *specbuf; /* font spec buffer used for rendering */
-	Atom xembed, wmdeletewin, netwmname, netwmpid;
+	Atom xembed, wmdeletewin, netwmname, netwmpid, selectionmode;
 	struct {
 		XIM xim;
 		XIC xic;
@@ -186,7 +187,7 @@ static void mousesel(XEvent *, int);
 static void mousereport(XEvent *);
 static char *kmap(KeySym, uint);
 static int match(uint, uint);
-
+static void updateselectionmodeatom(void);
 
 static void run(void);
 static void usage(void);
@@ -256,12 +257,21 @@ static char *opt_title = NULL;
 
 static int invertcolors = 0;
 static int oldbutton = 3; /* button event on startup: 3 = release */
+static int selectionmodeenabled = 0;
 
 void
 invert(const Arg *dummy)
 {
 	invertcolors = !invertcolors;
 	redraw();
+}
+
+void
+toggleselectionmode(const Arg *dummy)
+{
+	selectionmodeenabled = !selectionmodeenabled;
+	selclear();
+	updateselectionmodeatom();
 }
 
 Color
@@ -483,6 +493,9 @@ bpress(XEvent *e)
 {
 	struct timespec now;
 	int snap;
+
+	if (!selectionmodeenabled)
+		return;
 
 	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forcemousemod)) {
 		mousereport(e);
@@ -1217,6 +1230,9 @@ xinit(int cols, int rows)
 	XChangeProperty(xw.dpy, xw.win, xw.netwmpid, XA_CARDINAL, 32,
 			PropModeReplace, (uchar *)&thispid, 1);
 
+	xw.selectionmode = XInternAtom(xw.dpy, "_ST_SELMODE", False);
+	updateselectionmodeatom();
+
 	win.mode = MODE_NUMLOCK;
 	resettitle();
 	xhints();
@@ -1882,6 +1898,12 @@ cmessage(XEvent *e)
 		ttyhangup();
 		exit(0);
 	}
+}
+
+void
+updateselectionmodeatom() {
+	XChangeProperty(xw.dpy, xw.win, xw.selectionmode, XA_CARDINAL, 32,
+			PropModeReplace, (uchar *)&selectionmodeenabled, 1);
 }
 
 void
